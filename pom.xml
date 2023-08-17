@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.pj</groupId>
-  <artifactId>springboot-pure</artifactId>
+  <artifactId>random-walk</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <!-- SpringBoot -->
@@ -17,7 +17,7 @@
   <properties>
     <java.version>1.8</java.version>
     <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
-		<docker.image.prefix>82.157.77.212:30002/my_project</docker.image.prefix>
+		<docker.image.prefix>joeshero</docker.image.prefix>
 	</properties>
 
   <dependencies>
@@ -45,7 +45,6 @@
             <id>default</id>
             <goals>
               <goal>build</goal>
-<!--              <goal>push</goal>-->
             </goals>
           </execution>
         </executions>

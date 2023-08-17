@@ -4,14 +4,14 @@ on:
   push:
     # 分支
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 env:
   REGISTRY: docker.io  # 默认为 docker.io，即去 Docker Hub 上找
   IMAGE_NAME: ${{ github.event.repository.name }}  # 使用 GitHub Actions 提供的能力，可以自动获取仓库名
   IMAGE_TAG: latest  # Docker Image 的 tag，为了方便我直接设置 latest
   PORT: 8888  # 服务要暴露的端口，可以改
+  PROJECT_NAME: random-walk
+  PROJECT-VERSION: 0.0.1-SNAPSHOT
 
 jobs:
   compile:
@@ -34,35 +34,30 @@ jobs:
       # 编译打包
       - name: Build with Maven
         run: mvn package -Dmaven.test.skip=true
-      # 登录Docker Hub
-      - name: Login to Docker Hub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
+
+      - name: Docker push
+        uses: azure/docker-login@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      # build 镜像并push到中央仓库中
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: random-work:latest
-      # push后，用ssh连接服务器执行脚本
-      - name: ssh scp ssh pipelines
-        uses: cross-the-world/ssh-pipeline@master
+                      - run: |
+                      docker build -t random:${{ github.sha }} -t .
+                      docker push joeshero/random:${{ github.sha }}
+                      docker push joeshero/random
+            # 让K8s应用deployment
+                      - run: |
+                          sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
+      - name: deploy to cluster
+        uses: steebchen/kubectl@master
         env:
-          WELCOME: "ssh scp ssh pipelines"
-          LASTSSH: "Doing something after copying"
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+          KUBECTL_VERSION: "1.15"
         with:
-          host: ${{ secrets.HOST }}
-          user: ${{ secrets.USER }}
-          pass: ${{ secrets.PRIVATE_KEY }}
-          connect_timeout: 10s
-          script: |
-              (rm -rf /home/github/test || true)
-              ls -la  
-              echo $WELCOME 
-              mkdir -p /home/github/test/test1 && 
-              mkdir -p /home/github/test/test2 &&
+          args: apply -f deployment.yaml
+      - name: verify deployment
+        uses: steebchen/kubectl@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+          KUBECTL_VERSION: "1.15"
+        with:
+          args: '"rollout status -n blog deployment/blog"'
