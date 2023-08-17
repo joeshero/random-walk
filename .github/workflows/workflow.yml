@@ -4,6 +4,8 @@ on:
   push:
     # 分支
     branches: [master]
+    pull_request:
+      branches: [ master ]
 
 env:
   REGISTRY: docker.io # 默认为 docker.io，即去 Docker Hub 上找
