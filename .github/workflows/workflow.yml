@@ -43,9 +43,9 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - run: |
-          docker build -t random:${{ github.sha }} .
-          docker push joeshero/random:${{ github.sha }}
-          docker push joeshero/random
+          docker build -t random-work:${{ github.sha }} .
+          docker push joeshero/random-work:${{ github.sha }}
+          docker push joeshero/random-work
         # 让K8s应用deployment
       - run: |
           sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
