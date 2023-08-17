@@ -50,11 +50,19 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: random-work:latest
       # push后，用ssh连接服务器执行脚本
-      - name: SSH
-        uses: fifsky/ssh-action@master
+      - name: ssh scp ssh pipelines
+        uses: cross-the-world/ssh-pipeline@master
+        env:
+          WELCOME: "ssh scp ssh pipelines"
+          LASTSSH: "Doing something after copying"
         with:
-          command: |
-            cd /
           host: ${{ secrets.HOST }}
           user: ${{ secrets.USER }}
-          key: ${{ secrets.PRIVATE_KEY}}
+          pass: ${{ secrets.PRIVATE_KEY }}
+          connect_timeout: 10s
+          script: |
+              (rm -rf /home/github/test || true)
+              ls -la  
+              echo $WELCOME 
+              mkdir -p /home/github/test/test1 && 
+              mkdir -p /home/github/test/test2 &&
