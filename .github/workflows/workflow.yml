@@ -50,23 +50,11 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: random-work:latest
       # push后，用ssh连接服务器执行脚本
-#      - name: SSH
-#        uses: fifsky/ssh-action@master
-#        with:
-#          command: |
-#            echo hello world
-#          host: ${{ secrets.HOST }}
-#          user: ${{ secrets.USER }}
-#          key: ${{ secrets.PRIVATE_KEY}}
-          # 连接到远程服务器
-      - name: Connect to server
-        uses: webfactory/ssh-agent@v0.4.1
+      - name: SSH
+        uses: fifsky/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.PRIVATE_KEY }}
-      # 初始化 knownhosts
-      - name: Setup knownhosts
-        run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-      # 触发服务器部署脚本
-      - name: Trigger server deployment script
-        run: |
-          echo hello
+          command: |
+            echo hello world
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY}}
