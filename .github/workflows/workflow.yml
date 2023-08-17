@@ -48,7 +48,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: random-work/imageName:latest
+          tags: random-work:latest
       # push后，用ssh连接服务器执行脚本
       - name: SSH
         uses: fifsky/ssh-action@master
