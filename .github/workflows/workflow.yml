@@ -43,7 +43,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - run: |
-          docker build -t random:${{ github.sha }} -t .
+          docker build -t random:${{ github.sha }} .
           docker push joeshero/random:${{ github.sha }}
           docker push joeshero/random
         # 让K8s应用deployment
