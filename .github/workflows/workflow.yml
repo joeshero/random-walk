@@ -46,22 +46,3 @@ jobs:
           docker build -t random-work:${{ github.sha }} -t joeshero/random-work:latest .
           docker push joeshero/random-work:${{ github.sha }}
           docker push joeshero/random-work
-        # 让K8s应用deployment
-      - run: |
-          sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
-      - name: deploy to cluster
-        uses: steebchen/kubectl@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          KUBECTL_VERSION: "1.23.6"
-        with:
-          args: apply -f deployment.yaml
-  deploy:
-    name: deploy to cluster
-    steps:
-      - uses: actions/checkout@master
-      - name: deploy to cluster
-        uses: steebchen/kubectl@v2.0.0
-        with: # defaults to latest kubectl binary version
-          config: ${{ secrets.KUBE_CONFIG_DATA }}
-          command: get pods
