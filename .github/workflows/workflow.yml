@@ -43,6 +43,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - run: |
-          docker build -t -t joeshero/random-walk:latest random-walk:${{ github.sha }}  .
+          docker build -t joeshero/random-walk:latest -t random-walk:${{ github.sha }}  .
 #          docker push joeshero/random-walk:${{ github.sha }}
           docker push joeshero/random-walk
