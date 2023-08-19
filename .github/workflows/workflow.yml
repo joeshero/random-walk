@@ -60,4 +60,4 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           command_timeout: 20s # shell 命令执行超时时间，20s
           script: |
-            echo hello
+            kubectl set image deployment/project-deployment random-walk=joeshero/random-work:${{ github.sha }}
