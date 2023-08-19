@@ -53,11 +53,13 @@ jobs:
             joeshero/random-walk:latest
             joeshero/random-walk:${{ github.sha }}
       - name: Deploy
-        uses: appleboy/ssh-action@master # 使用 appleboy/ssh-action 这个开源 action，远程执行 shell 脚本
+        # 使用 appleboy/ssh-action 这个开源 action，远程执行 shell 脚本
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
-          command_timeout: 20s # shell 命令执行超时时间，20s
+          # shell 命令执行超时时间，60s
+          command_timeout: 60s
           script: |
-            kubectl set image deployment/project-deployment random-walk=joeshero/random-work:${{ github.sha }}
+            kubectl set image deployment/project-deployment random-walk=joeshero/random-walk:${{ github.sha }} -n dev
