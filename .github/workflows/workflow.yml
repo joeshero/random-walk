@@ -52,3 +52,12 @@ jobs:
           tags: |
             joeshero/random-walk:latest
             joeshero/random-walk:${{ github.sha }}
+      - name: Deploy
+        uses: appleboy/ssh-action@master # 使用 appleboy/ssh-action 这个开源 action，远程执行 shell 脚本
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          command_timeout: 20s # shell 命令执行超时时间，20s
+          script: |
+            echo hello
