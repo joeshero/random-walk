@@ -9,6 +9,6 @@ public class IndexCtrl {
 
   @GetMapping("/hello")
   public Object hello() {
-    return "hello update 3";
+    return "hello update 4";
   }
 }
